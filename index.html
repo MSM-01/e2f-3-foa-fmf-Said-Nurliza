@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Приглашение на свадьбу — Саид & Нурлиза</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Marck Script (рукописный) и Montserrat (основной) -->
+    <link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #e6eded;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; 
+        }
+
+        .serif {
+            /* Используем надежный Google Font */
+            font-family: 'Marck Script', cursive;
+        }
+
+        .mobile-container {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+            box-shadow: 0 0 20px rgba(0,0,0,0.08);
+            min-height: 100vh;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+        .show-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .text-accent {
+            color: #148080; 
+        }
+        .bg-accent {
+            background-color: #e0f2f1;
+        }
+        
+        #intro-doors {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            background-color: #e6eded;
+            cursor: pointer;
+        }
+        .door {
+            width: 50%;
+            height: 100%;
+            background-image: url('image_7f9d454.png');
+            background-repeat: no-repeat;
+            background-size: 200% 100%;
+            transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1);
+            will-change: transform;
+        }
+        #door-left {
+            background-position: left center;
+        }
+        #door-right {
+            background-position: right center;
+        }
+
+        /* --- ОБНОВЛЕННАЯ КНОПКА МУЗЫКИ --- */
+        #music-toggle {
+            position: fixed;
+            bottom: 30px; 
+            right: 20px;  
+            z-index: 10000;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #148080;
+            color: #148080;
+            border-radius: 50%;
+            width: 80px; /* Увеличенный размер для текста */
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        #music-toggle.paused {
+            opacity: 0.6;
+            border-color: #999;
+            color: #999;
+        }
+
+        /* Анимация вращения ободка */
+        .text-ring {
+            position: absolute;
+            width: 95%;
+            height: 95%;
+            animation: spinText 10s linear infinite;
+        }
+        #music-toggle.paused .text-ring {
+            animation-play-state: paused;
+        }
+        .text-ring text {
+            font-size: 11.5px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            letter-spacing: 1px;
+            fill: currentColor;
+        }
+        @keyframes spinText {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #music-icon {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Фоновая музыка -->
+    <audio id="bg-music" loop preload="auto">
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Кнопка плеера с текстом -->
+    <button id="music-toggle" class="paused" onclick="toggleMusic()" title="Включить/Выключить музыку">
+        <svg class="text-ring" viewBox="0 0 100 100">
+            <path id="text-path" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="transparent"></path>
+            <text>
+                <textPath href="#text-path" startOffset="0">
+                    ВКЛЮЧИТЬ МУЗЫКУ • ВЫКЛЮЧИТЬ МУЗЫКУ • 
+                </textPath>
+            </text>
+        </svg>
+        <svg id="music-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+        </svg>
+    </button>
+
+    <!-- Заставка со створками -->
+    <div id="intro-doors" onclick="openInvitation()">
+        <div id="door-left" class="door"></div>
+        <div id="door-right" class="door"></div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="mobile-container relative flex flex-col justify-between" id="main-content">
+
+        <header class="relative h-screen flex flex-col items-center justify-between text-center p-6 text-[#333]">
+            <div class="absolute inset-0 opacity-15 bg-[url('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80')] bg-cover bg-center"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-[#f9f9f9]/70 via-[#f9f9f9]/30 to-[#f9f9f9]"></div>
+
+            <div class="relative z-10 space-y-4 my-auto">
+                <h1 class="serif text-7xl font-normal tracking-wide text-accent leading-none">Саид</h1>
+                <p class="serif text-4xl text-[#148080] italic">&</p>
+                <h1 class="serif text-7xl font-normal tracking-wide text-accent leading-none">Нурлиза</h1>
+                <div class="w-16 h-[1px] bg-[#148080]/50 mx-auto my-6"></div>
+                <p class="text-sm tracking-[0.25em] uppercase text-gray-500 font-medium">10 сентября 2026 года</p>
+            </div>
+
+            <div class="relative z-10 pb-10 animate-bounce">
+                <svg class="w-6 h-6 text-[#148080] mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg>
+            </div>
+        </header>
+
+        <section class="px-6 py-14 text-center space-y-6">
+            <p class="serif text-center text-[#148080] text-3xl leading-relaxed">
+                السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ
+            </p>
+            <h2 class="serif text-4xl text-accent pb-2">Дорогие гости!</h2>
+            
+            <p class="serif text-gray-700 leading-relaxed text-2xl px-2 space-y-3">
+                С великой благодарностью ко Всевышнему и с радостью мы приглашаем Вас разделить с нами один из самых светлых и важных дней в нашей жизни — день заключения священного союза двух сердец.<br><br>
+                Ваше присутствие станет для нас большой честью и благословением.<br>
+                Пусть этот день будет наполнен добрыми молитвами, искренними улыбками и теплотой.
+            </p>
+            
+            <div class="pt-8">
+                <p class="serif text-3xl text-[#148080] leading-relaxed">
+                    С уважением,<br> Шамуров Рамазан<br>и Маджина Айша
+                </p>
+            </div>
+        </section>
+        
+        <section class="px-6 py-12 bg-[#e0f2f1] text-center space-y-8 border-t border-[#148080]/20">
+             <div class="space-y-4">
+                 <h3 class="serif text-3xl text-accent">До свадьбы:</h3>
+                 <div class="flex justify-center gap-3 text-accent font-medium">
+                     <div class="text-center bg-white px-3 py-2 rounded-lg shadow border border-[#148080]/30 min-w-[70px]">
+                         <span class="text-4xl serif block" id="days">0</span>
+                         <span class="text-[10px] uppercase block text-gray-500 mt-1">дней</span>
+                     </div>
+                     <div class="text-center bg-white px-3 py-2 rounded-lg shadow border border-[#148080]/30 min-w-[70px]">
+                         <span class="text-4xl serif block" id="hours">0</span>
+                         <span class="text-[10px] uppercase block text-gray-500 mt-1">часов</span>
+                     </div>
+                      <div class="text-center bg-white px-3 py-2 rounded-lg shadow border border-[#148080]/30 min-w-[70px]">
+                         <span class="text-4xl serif block" id="minutes">0</span>
+                         <span class="text-[10px] uppercase block text-gray-500 mt-1">минут</span>
+                     </div>
+                      <div class="text-center bg-white px-3 py-2 rounded-lg shadow border border-[#148080]/30 min-w-[70px]">
+                         <span class="text-4xl serif block" id="seconds">0</span>
+                         <span class="text-[10px] uppercase block text-gray-500 mt-1">секунд</span>
+                     </div>
+                 </div>
+             </div>
+             
+             <div class="flex justify-center pt-4">
+                 <svg width="120" height="144" viewBox="0 0 100 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 130 C 15 130, 10 120, 10 110 V 90 C 10 70, 20 60, 40 60 L 45 130 H 15 Z" fill="#f9f9f9"/>
+                    <path d="M45 130 H 15 V 125 C 15 120, 20 115, 25 115 H 35 C 40 115, 45 120, 45 125 V 130 Z" fill="#fff" opacity="0.5"/>
+                    <path d="M30 40 Q 30 30, 40 30 H 20 Q 30 30, 30 40" fill="#f9f9f9"/>
+                    <path d="M30 40 L 15 60 C 10 70, 10 80, 15 90 C 20 100, 25 105, 30 105 H 35 C 40 105, 45 100, 50 90 C 55 80, 55 70, 50 60 L 30 40 Z" fill="#fff" opacity="0.8"/>
+                    <ellipse cx="26" cy="52" rx="1" ry="1.5" fill="#333"/>
+                    <ellipse cx="34" cy="52" rx="1" ry="1.5" fill="#333"/>
+                    <path d="M15 50 Q 20 45, 25 48" fill="none" stroke="#333" stroke-width="0.5"/>
+                    <path d="M35 50 Q 40 45, 45 48" fill="none" stroke="#333" stroke-width="0.5"/>
+                    <path d="M20 35 C 20 25, 40 25, 40 35 L 35 40 H 25 Z" fill="#f9f9f9" stroke="#148080" stroke-width="0.5"/>
+                    <path d="M60 130 C 55 130, 50 120, 50 110 V 90 C 50 70, 60 60, 80 60 L 85 130 H 55 Z" fill="#333"/>
+                    <path d="M65 100 L 70 95 L 75 100 Z" fill="#f9f9f9"/>
+                    <path d="M68 97 L 72 97 Z" fill="#333" stroke="#333" stroke-width="0.5"/>
+                    <path d="M68 99 H 72 L 70 97 L 68 99 Z" fill="#148080" opacity="0.5"/>
+                    <ellipse cx="70" cy="55" rx="12" ry="15" fill="#f5e6d3"/>
+                    <ellipse cx="66" cy="52" rx="1" ry="1.5" fill="#333"/>
+                    <ellipse cx="74" cy="52" rx="1" ry="1.5" fill="#333"/>
+                    <path d="M55 50 Q 60 45, 65 48" fill="none" stroke="#333" stroke-width="0.5"/>
+                    <path d="M75 50 Q 80 45, 85 48" fill="none" stroke="#333" stroke-width="0.5"/>
+                    <path d="M63 40 C 63 30, 77 30, 77 40 L 75 45 H 65 Z" fill="#333"/>
+                    <circle cx="50" cy="95" r="5" fill="white"/>
+                    <circle cx="50" cy="95" r="3" fill="#f5e6d3" opacity="0.8"/>
+                    <path d="M45 92 C 43 90, 43 85, 45 83 H 55 C 57 85, 57 90, 55 92 Z" fill="#148080" opacity="0.3"/>
+                    <circle cx="50" cy="85" r="5" fill="white"/>
+                    <circle cx="45" cy="82" r="3" fill="white"/>
+                    <circle cx="55" cy="82" r="3" fill="white"/>
+                    <circle cx="50" cy="85" r="1.5" fill="#148080" opacity="0.5"/>
+                 </svg>
+             </div>
+        </section>
+
+        <section class="px-6 py-12 bg-[#f5f5f0] text-center space-y-12 border-y border-[#148080]/20">
+            <div>
+                <div class="space-y-2 mb-8">
+                    <span class="text-accent uppercase tracking-widest text-xs font-medium">Дата торжества</span>
+                    <p class="serif text-5xl text-accent pb-1">10 сентября 2026</p>
+                    <p class="text-gray-600 text-sm">Сбор гостей: 09:00</p>
+                </div>
+                
+                <div class="space-y-2">
+                    <span class="text-accent uppercase tracking-widest text-xs font-medium">Место проведения</span>
+                    <p class="serif text-4xl text-accent pb-1">Пролетарская 134/5</p>
+                    <p class="text-gray-600 text-sm">Село Ивановка</p>
+                </div>
+            </div>
+
+            <div class="pt-4 space-y-6">
+                <p class="serif text-[28px] text-gray-800 leading-snug">
+                    Для вашего удобства ниже<br>представлена карта
+                </p>
+                
+                <div class="flex justify-center">
+                    <a href="https://2gis.kg/bishkek/geo/70030076159949455/75.068389%2C42.890318" target="_blank" class="inline-flex flex-col items-center hover:scale-110 transition-transform duration-300">
+                        <img src="image_f91723.png" alt="Открыть в 2GIS" class="w-24 h-24 shadow-md rounded-[28px] object-cover">
+                        <p class="text-4xl text-[#148080] mt-4" style="font-family: 'Times New Roman', Georgia, serif;">2 GIS</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center py-8 text-xs text-gray-500 border-t border-[#148080]/20 space-y-1 bg-[#f9f9f9]">
+            <p class="serif text-lg text-accent mb-2">Made by Muslim _/(-_-)\_ :)</p>
+            <p>Хотите создать подобное приглашение?</p>
+            <p>обращайтесь по номеру: 0 551 304 056</p>
+        </footer>
+
+    </div>
+
+    <!-- СКРИПТЫ С НОВОЙ ЛОГИКОЙ -->
+    <script>
+        const music = document.getElementById('bg-music');
+        const musicBtn = document.getElementById('music-toggle');
+        let isOpen = false;
+        let musicStarted = false; // Отслеживаем, запустилась ли музыка
+
+        // Ручное переключение кнопкой
+        async function toggleMusic() {
+            if (music.paused) {
+                try {
+                    await music.play();
+                    musicBtn.classList.remove('paused');
+                    musicStarted = true;
+                } catch (e) {
+                    console.error("Ошибка воспроизведения:", e);
+                }
+            } else {
+                music.pause();
+                musicBtn.classList.add('paused');
+            }
+        }
+
+        // Анимация открытия дверей
+        async function openInvitation() {
+            if (isOpen) return;
+            isOpen = true;
+
+            document.getElementById('door-left').style.transform = 'translateX(-100%)';
+            document.getElementById('door-right').style.transform = 'translateX(100%)';
+            document.getElementById('main-content').classList.add('show-content');
+            
+            setTimeout(function() {
+                document.body.style.overflow = 'auto';
+                const doors = document.getElementById('intro-doors');
+                if (doors) doors.style.display = 'none';
+            }, 1500);
+        }
+
+        // Функция "хитрого" запуска звука
+        function playOnFirstInteraction() {
+            if (musicStarted) return; // Если уже играет, ничего не делаем
+            
+            music.play().then(() => {
+                musicStarted = true;
+                musicBtn.classList.remove('paused');
+                // Удаляем ловушки, когда звук успешно запустился
+                ['click', 'touchstart', 'scroll'].forEach(evt => {
+                    document.removeEventListener(evt, playOnFirstInteraction);
+                });
+            }).catch(err => {
+                // Если браузер заблокировал (например, еще не было касания), ждем следующего действия
+            });
+        }
+
+        window.addEventListener('load', function() {
+            // 1. Таймер: Открываем двери сами через 2 секунды (2000 мс)
+            setTimeout(openInvitation, 2000);
+            
+            // 2. Ловушки: Слушаем любое касание экрана гостем, чтобы включить музыку
+            ['click', 'touchstart', 'scroll'].forEach(evt => {
+                document.addEventListener(evt, playOnFirstInteraction, { passive: true });
+            });
+        });
+        
+        // Таймер обратного отсчета
+        var countDownDate = new Date("September 10, 2026 09:00:00").getTime();
+        var x = setInterval(function() {
+          var now = new Date().getTime();
+          var distance = countDownDate - now;
+
+          var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+          document.getElementById("days").innerHTML = days;
+          document.getElementById("hours").innerHTML = hours;
+          document.getElementById("minutes").innerHTML = minutes;
+          document.getElementById("seconds").innerHTML = seconds;
+
+          if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("days").innerHTML = 0;
+            document.getElementById("hours").innerHTML = 0;
+            document.getElementById("minutes").innerHTML = 0;
+            document.getElementById("seconds").innerHTML = 0;
+          }
+        }, 1000);
+    </script>
+</body>
+</html>
