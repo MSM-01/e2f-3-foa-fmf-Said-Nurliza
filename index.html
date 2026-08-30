@@ -88,7 +88,7 @@
             border: 2px solid #148080;
             color: #148080;
             border-radius: 50%;
-            width: 80px; /* Увеличенный размер для текста */
+            width: 80px;
             height: 80px;
             display: flex;
             align-items: center;
@@ -227,35 +227,9 @@
                  </div>
              </div>
              
+             <!-- Блок с картинкой Наруто и Хинаты вместо старого SVG -->
              <div class="flex justify-center pt-4">
-                 <svg width="120" height="144" viewBox="0 0 100 130" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 130 C 15 130, 10 120, 10 110 V 90 C 10 70, 20 60, 40 60 L 45 130 H 15 Z" fill="#f9f9f9"/>
-                    <path d="M45 130 H 15 V 125 C 15 120, 20 115, 25 115 H 35 C 40 115, 45 120, 45 125 V 130 Z" fill="#fff" opacity="0.5"/>
-                    <path d="M30 40 Q 30 30, 40 30 H 20 Q 30 30, 30 40" fill="#f9f9f9"/>
-                    <path d="M30 40 L 15 60 C 10 70, 10 80, 15 90 C 20 100, 25 105, 30 105 H 35 C 40 105, 45 100, 50 90 C 55 80, 55 70, 50 60 L 30 40 Z" fill="#fff" opacity="0.8"/>
-                    <ellipse cx="26" cy="52" rx="1" ry="1.5" fill="#333"/>
-                    <ellipse cx="34" cy="52" rx="1" ry="1.5" fill="#333"/>
-                    <path d="M15 50 Q 20 45, 25 48" fill="none" stroke="#333" stroke-width="0.5"/>
-                    <path d="M35 50 Q 40 45, 45 48" fill="none" stroke="#333" stroke-width="0.5"/>
-                    <path d="M20 35 C 20 25, 40 25, 40 35 L 35 40 H 25 Z" fill="#f9f9f9" stroke="#148080" stroke-width="0.5"/>
-                    <path d="M60 130 C 55 130, 50 120, 50 110 V 90 C 50 70, 60 60, 80 60 L 85 130 H 55 Z" fill="#333"/>
-                    <path d="M65 100 L 70 95 L 75 100 Z" fill="#f9f9f9"/>
-                    <path d="M68 97 L 72 97 Z" fill="#333" stroke="#333" stroke-width="0.5"/>
-                    <path d="M68 99 H 72 L 70 97 L 68 99 Z" fill="#148080" opacity="0.5"/>
-                    <ellipse cx="70" cy="55" rx="12" ry="15" fill="#f5e6d3"/>
-                    <ellipse cx="66" cy="52" rx="1" ry="1.5" fill="#333"/>
-                    <ellipse cx="74" cy="52" rx="1" ry="1.5" fill="#333"/>
-                    <path d="M55 50 Q 60 45, 65 48" fill="none" stroke="#333" stroke-width="0.5"/>
-                    <path d="M75 50 Q 80 45, 85 48" fill="none" stroke="#333" stroke-width="0.5"/>
-                    <path d="M63 40 C 63 30, 77 30, 77 40 L 75 45 H 65 Z" fill="#333"/>
-                    <circle cx="50" cy="95" r="5" fill="white"/>
-                    <circle cx="50" cy="95" r="3" fill="#f5e6d3" opacity="0.8"/>
-                    <path d="M45 92 C 43 90, 43 85, 45 83 H 55 C 57 85, 57 90, 55 92 Z" fill="#148080" opacity="0.3"/>
-                    <circle cx="50" cy="85" r="5" fill="white"/>
-                    <circle cx="45" cy="82" r="3" fill="white"/>
-                    <circle cx="55" cy="82" r="3" fill="white"/>
-                    <circle cx="50" cy="85" r="1.5" fill="#148080" opacity="0.5"/>
-                 </svg>
+                 <img src="WhatsApp Image 2026-08-30 at 13.19.20.jpeg" alt="Наруто и Хината" class="w-56 h-auto object-contain" style="mix-blend-mode: multiply;">
              </div>
         </section>
 
@@ -264,7 +238,7 @@
                 <div class="space-y-2 mb-8">
                     <span class="text-accent uppercase tracking-widest text-xs font-medium">Дата торжества</span>
                     <p class="serif text-5xl text-accent pb-1">10 сентября 2026</p>
-                    <p class="text-gray-600 text-sm">Незыр: 09:00</p>
+                    <p class="text-gray-600 text-sm">Сбор гостей: 09:00</p>
                 </div>
                 
                 <div class="space-y-2">
@@ -296,14 +270,12 @@
 
     </div>
 
-    <!-- СКРИПТЫ С НОВОЙ ЛОГИКОЙ -->
     <script>
         const music = document.getElementById('bg-music');
         const musicBtn = document.getElementById('music-toggle');
         let isOpen = false;
-        let musicStarted = false; // Отслеживаем, запустилась ли музыка
+        let musicStarted = false; 
 
-        // Ручное переключение кнопкой
         async function toggleMusic() {
             if (music.paused) {
                 try {
@@ -319,7 +291,6 @@
             }
         }
 
-        // Анимация открытия дверей
         async function openInvitation() {
             if (isOpen) return;
             isOpen = true;
@@ -335,33 +306,27 @@
             }, 1500);
         }
 
-        // Функция "хитрого" запуска звука
         function playOnFirstInteraction() {
-            if (musicStarted) return; // Если уже играет, ничего не делаем
+            if (musicStarted) return; 
             
             music.play().then(() => {
                 musicStarted = true;
                 musicBtn.classList.remove('paused');
-                // Удаляем ловушки, когда звук успешно запустился
                 ['click', 'touchstart', 'scroll'].forEach(evt => {
                     document.removeEventListener(evt, playOnFirstInteraction);
                 });
             }).catch(err => {
-                // Если браузер заблокировал (например, еще не было касания), ждем следующего действия
             });
         }
 
         window.addEventListener('load', function() {
-            // 1. Таймер: Открываем двери сами через 2 секунды (2000 мс)
             setTimeout(openInvitation, 2000);
             
-            // 2. Ловушки: Слушаем любое касание экрана гостем, чтобы включить музыку
             ['click', 'touchstart', 'scroll'].forEach(evt => {
                 document.addEventListener(evt, playOnFirstInteraction, { passive: true });
             });
         });
         
-        // Таймер обратного отсчета
         var countDownDate = new Date("September 10, 2026 09:00:00").getTime();
         var x = setInterval(function() {
           var now = new Date().getTime();
